@@ -1,0 +1,5 @@
+stages:
+  data_cleaning:
+    cmd: python src\data\data_cleaning.py
+    outs:
+    - data/cleaned
