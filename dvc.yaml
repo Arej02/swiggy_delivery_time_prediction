@@ -4,3 +4,14 @@ stages:
     outs:
     - data/cleaned
 
+
+
+
+  data_preparation:
+    cmd: python data_preparation.py
+    deps:
+    - src\data\data_cleaning.py
+    - src\data\data_preparation.py
+    - data/cleaned/swiggy_cleaned.csv
+    outs:
+    - data/interim

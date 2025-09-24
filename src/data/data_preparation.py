@@ -40,7 +40,6 @@ def save_data(df:pd.DataFrame,save_path:Path)->None:
         logger.exception("Failed to save the data")
 
 #Path:
-
 if __name__=="__main__":
     root_path=Path(__file__).parent.parent.parent
     data_path=root_path/"data"/"cleaned"/"swiggy_cleaned.csv"
