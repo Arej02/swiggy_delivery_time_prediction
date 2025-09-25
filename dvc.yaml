@@ -3,10 +3,6 @@ stages:
     cmd: python src\data\data_cleaning.py
     outs:
     - data/cleaned
-
-
-
-
   data_preparation:
     cmd: python data_preparation.py
     deps:
@@ -15,3 +11,13 @@ stages:
     - data/cleaned/swiggy_cleaned.csv
     outs:
     - data/interim
+  data_preprocessing:
+    cmd: python data_preprocessing.py
+    deps:
+    - src\data\data_preparation.py
+    - src\features\data_preprocessing.py
+    - data/interim/train.csv
+    - data/interim/test.csv
+    outs:
+    - data\proccessed
+    - models
