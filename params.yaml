@@ -1,3 +1,24 @@
 data_preparation:
   test_size: 0.2
   random_state: 42
+
+models:
+  lightgbm:
+    'learning_rate': 0.05597085845487942
+    'num_leaves': 85
+    'feature_fraction': 0.8475689756385575
+    'bagging_fraction': 0.845652828843328
+    'bagging_freq': 2
+    'max_depth': 36
+    'min_data_in_leaf': 62
+    'lambda_l1': 0.0038672702290316607
+    'lambda_l2': 0.6632645081461954
+    
+
+  random_forest:
+    'n_estimators': 542
+    'max_depth': 17
+    'min_samples_split': 15
+    'min_samples_leaf': 10
+    'bootstrap': True
+    

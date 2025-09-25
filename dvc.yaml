@@ -1,8 +1,12 @@
 stages:
+
+ # Stage 1: Data Cleaning
   data_cleaning:
     cmd: python src\data\data_cleaning.py
     outs:
     - data/cleaned
+  
+# Stage 2: Data preparation
   data_preparation:
     cmd: python data_preparation.py
     deps:
@@ -11,6 +15,8 @@ stages:
     - data/cleaned/swiggy_cleaned.csv
     outs:
     - data/interim
+
+# Stage 3: Data Preprocessing
   data_preprocessing:
     cmd: python data_preprocessing.py
     deps:
@@ -19,5 +25,19 @@ stages:
     - data/interim/train.csv
     - data/interim/test.csv
     outs:
-    - data\proccessed
-    - models
+    - data/processed/train_trans.csv
+    - data/processed/test_trans.csv
+    - models/preprocessor.joblib
+# Stage 4: Traing the model
+  train:
+    cmd: python train.py
+    deps:
+    - src/models/train.py
+    - data/processed/train_trans.csv
+    params:
+    - train.random_forest
+    - train.lightgbm
+    outs:
+    - models/power_transformer.joblib
+    - models/stacking_regressor.joblib
+    - models\model.joblib
