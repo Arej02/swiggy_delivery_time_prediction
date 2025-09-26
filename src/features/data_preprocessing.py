@@ -68,7 +68,7 @@ def save_data(df:pd.DataFrame,url:Path)->None:
         logger.info("The file could not be saved")
 
 def save_transformer(transformer,save_dir:Path,name:str):
-    save_path=save_dir/f"{name}.pkl"
+    save_path=save_dir/f"{name}.joblib"
     joblib.dump(transformer,save_path)
     logger.info(f"Transformer saved to the path {save_path}")
 
@@ -153,5 +153,5 @@ if __name__=="__main__":
     save_data(test_data_df,save_path_test)
 
     # Save transformer
-    save_transformer(preprocessor,transformer_dir,"preprecessor")
+    save_transformer(preprocessor,transformer_dir,"preprocessor")
 

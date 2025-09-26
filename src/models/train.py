@@ -28,9 +28,9 @@ def load_data(url:Path)->pd.DataFrame:
         logger.info("File doesnot exist")
 
 
-lightgbm_params=yaml.safe_load(open('params.yaml','r'))['models']['lightgbm']
+lightgbm_params=yaml.safe_load(open('params.yaml','r'))['train']['lightgbm']
 
-rf_params=yaml.safe_load(open('params.yaml','r'))['models']['random_forest']
+rf_params=yaml.safe_load(open('params.yaml','r'))['train']['random_forest']
 
 def train_model(model,X_train:pd.DataFrame,y_train):
     model.fit(X_train,y_train)

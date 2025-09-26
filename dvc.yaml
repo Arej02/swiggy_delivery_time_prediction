@@ -8,7 +8,7 @@ stages:
   
 # Stage 2: Data preparation
   data_preparation:
-    cmd: python data_preparation.py
+    cmd: python src/data/data_preparation.py
     deps:
     - src\data\data_cleaning.py
     - src\data\data_preparation.py
@@ -18,7 +18,7 @@ stages:
 
 # Stage 3: Data Preprocessing
   data_preprocessing:
-    cmd: python data_preprocessing.py
+    cmd: python src/features/data_preprocessing.py
     deps:
     - src\data\data_preparation.py
     - src\features\data_preprocessing.py
@@ -30,7 +30,7 @@ stages:
     - models/preprocessor.joblib
 # Stage 4: Traing the model
   train:
-    cmd: python train.py
+    cmd: python src/models/train.py
     deps:
     - src/models/train.py
     - data/processed/train_trans.csv
@@ -41,3 +41,19 @@ stages:
     - models/power_transformer.joblib
     - models/stacking_regressor.joblib
     - models\model.joblib
+  # Stage 5:
+  evaluation:
+    cmd: python src/models/evaluation.py
+    deps:
+    - src/models/evaluation.py
+    - data/processed/train_trans.csv
+    - data/processed/test_trans.csv
+    - models/model.joblib
+    outs:
+    - run_information.json
+
+  register_model:
+    cmd: python src/models/register_model.py
+    deps:
+    - src/models/register_model.py
+    - run_information.json

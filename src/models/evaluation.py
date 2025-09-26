@@ -43,6 +43,15 @@ def load_model(url:Path):
     logger.info("Model has been read")
     return model
 
+def save_model_info(save_json_path,run_id,artifact_path,model_name):
+    info_dict={
+        "run_id":run_id,
+        "artifact_path":artifact_path,
+        "model_name":model_name
+    }
+    with open(save_json_path,"w") as f:
+        json.dump(info_dict,f,indent=4)
+
 if __name__=="__main__":
 
     root_path=Path(__file__).parent.parent.parent
@@ -83,23 +92,26 @@ if __name__=="__main__":
     logger.info("Cross Validation calculated")
     scores=-cv.mean()
 
-    with mlflow.start_run(run_name="Final model"):
+    with mlflow.start_run(run_name="Final model") as run:
 
         # Set tag
         mlflow.set_tag("model","Food Delivery Time Regressor")
 
-        # Log parameters:
+        # log parameters:
         for param_name, param_value in model.get_params().items():
             mlflow.log_param(param_name, param_value)
 
-        # Log metrics:
+        # log metrics:
         mlflow.log_metric("training_mae",train_mae)
         mlflow.log_metric("testing_mae",test_mae)
         mlflow.log_metric("training_r2",train_r2)
         mlflow.log_metric("testing_r2",test_r2)
         mlflow.log_metric("cross validation",scores)
 
-        # Log Dataset:
+        # log schema:
+        mlflow.sklearn.save_model(model, path="models/delivery_time_pred_model")
+
+        # log Dataset:
         train_data_input = mlflow.data.from_pandas(traning_data,targets=target_col)
         test_data_input = mlflow.data.from_pandas(testing_data,targets=target_col)
         
@@ -107,4 +119,19 @@ if __name__=="__main__":
         mlflow.log_input(dataset=train_data_input,context="training")
         mlflow.log_input(dataset=test_data_input,context="validation")
 
-        logger.info("Mlflow logging completed")
+        # log artifacts:
+        mlflow.log_artifact(root_path/"models"/"power_transformer.joblib")
+        mlflow.log_artifact(root_path/"models"/"preprecessor.pkl")
+        mlflow.log_artifact(root_path/"models"/"stacking_regressor.joblib")
+
+        # Get the artifacts path:
+        artifact_uri=mlflow.get_artifact_uri()
+
+    run_id=run.info.run_id
+    model_name="delivery_time_pred_model"
+    save_json_path=root_path/"run_information.json"
+
+    # Save the model:
+    save_model_info(save_json_path,run_id,artifact_uri,model_name)
+
+    logger.info("Mlflow logging completed")
